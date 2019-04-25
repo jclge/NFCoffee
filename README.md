@@ -45,3 +45,5 @@ OR
 
 It has been done for a project in Epitech Lyon, to make the coffee transactions easier inside the Student Union "Zero To One" and nexts.
 It will probably need many modifications to adapt on your device and/or software.
+
+\ Halil Bagdadi & Julien Calenge /
