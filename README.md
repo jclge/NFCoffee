@@ -18,20 +18,21 @@ Here is a simple Python 2.7 program to read NFC tags on cards to manage coffees 
 ~$ pip install pathlib2
 ~$ pip install tkinter
 ~$ git clone https://github.com/mdeverdelhan/ACR122U-reader-writer.git / OR whatever you will need for your NFC reader/writer
+```
 Potential librairies for a GPin-connected screen
 
 ### Usage
 
 ```bash
 ~$ sudo python total.py
-
+```
 OR
 
 ```bash
 ~$ sudo python -m py_compile total.py
 ~$ sudo chmod 755 total.pyc
 ~$ sudo ./total.pyc
-
+```
 ### Device features
 
        A Raspberry pi 3 or above.
