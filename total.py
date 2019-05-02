@@ -229,13 +229,14 @@ def go_back(path, root): #After switch()
     button(res, root, frame)
 
 def log_hist(path, root): #Print last 12 trades on a card
-    root.destroy()
+	root.destroy()
     root = Tk()
     i = 0
     y = 0
     u = 0
     res = [''] * 12
     temp = [''] * 30
+    temp_date = [''] * 30
     fd = open('log')
     rode = fd.read()
     trs = [''] * len(rode)
@@ -252,7 +253,14 @@ def log_hist(path, root): #Print last 12 trades on a card
     i = 0
     rode = ''.join(trs)
     while i != len(rode):
-        if rode[i] == '.' and rode[i + 1] == '.':
+        if rode[i] == '2' and rode[i + 1] == '0' and rode[i + 4] == '-':
+            while rode[i] != '.':
+                temp_date[y] = rode[i]
+                y += 1
+                i += 1
+            y = 0
+            temp_date[10] = ' '
+            i += 8
             while rode[i] != '$':
                 temp[y] = rode[i]
                 y += 1
@@ -266,9 +274,9 @@ def log_hist(path, root): #Print last 12 trades on a card
                     u = 11
                     y = 0
 		if rode[i + 4] != '$':
-                    res[u] = ''.join(temp) + rode[i + 1] + rode[i + 3] + rode[i + 4] + '\n'
+                    res[u] = ''.join(temp_date) + rode[i + 1] + rode[i + 3] + rode[i + 4] + '\n'
                 else:
-                    res[u] = ''.join(temp) + rode[i + 1] + rode[i + 3] + '\n'
+                    res[u] = ''.join(temp_date) + rode[i + 1] + rode[i + 3] + '\n'
                 u += 1
         i += 1
     init = ''.join(res)
