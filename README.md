@@ -36,10 +36,11 @@ OR
 ### Device features
 
        A Raspberry pi 3 or above.
-       An Arduino able to do the same or above.
+       Or an Arduino able to do the same.
        A screen (at least 2.5 inch to keep it user friendly).
        A NFC reader, here we have used the ACR 122U.
-       A 3*3 matrix keypad with 7 dupont connectors.
+       A 3*4 matrix keypad with 7 dupont connectors.
+       It could work perfectly with a 4*4 matrix or simply a laptop/computer. 
 
 ### Notes
 
