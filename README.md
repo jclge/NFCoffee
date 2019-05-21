@@ -26,13 +26,6 @@ Potential librairies for a GPin-connected screen
 ```bash
 ~$ sudo python total.py
 ```
-OR
-
-```bash
-~$ sudo python -m py_compile total.py
-~$ sudo chmod 755 total.pyc
-~$ sudo ./total.pyc
-```
 ### Device features
 
        A Raspberry pi 3 or above.
