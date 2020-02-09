@@ -1,9 +1,7 @@
 # coding: utf-8
 import nfc
 from datetime import datetime
-import tkinter
 import base64
-from tkinter import *
 from time import sleep
 import time
 import subprocess
