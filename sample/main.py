@@ -68,19 +68,19 @@ class App_empty(QMainWindow, QWidget):
         self.setStyleSheet("background-color: black")
         self.textbox = QLineEdit(self)
         self.textbox.move(0, 0)
-        self.textbox.resize(width/3*2, height/2)
+        self.textbox.resize(width/2, height/4)
         self.textbox.setReadOnly(True)
         self.textbox.setText('Aucun café restant')
         self.textbox.setStyleSheet("background-color: white; font-size: 36px")
         button_r = QPushButton('RECHARGER', self)
         button_r.setStyleSheet("background-color: orange; font-size: 36px")
-        button_r.resize(width,height/2-height/10)
-        button_r.move(0,height/2)
+        button_r.resize(width,(height/4)*3-height/10)
+        button_r.move(0,height/4)
         button_r.clicked.connect(self.on_click)
-        button_t = QPushButton('Historic', self)
+        button_t = QPushButton('Historique', self)
         button_t.setStyleSheet("background-color: orange; font-size: 26px")
-        button_t.resize(width/3,height/2)
-        button_t.move(width/3*2,0)
+        button_t.resize(width/2,height/4)
+        button_t.move(width/2,0)
         button_t.clicked.connect(self.historic)
 
         button_s = QPushButton('Annuler', self)
@@ -113,6 +113,7 @@ class Window1(QDialog):
     def __init__(self, value, parent=None):
         super().__init__()
         self.title = 'NFCoffee'
+        self.total = 0
         self.left = 10
         self.top = 10
         self.width = width
@@ -131,33 +132,33 @@ class Window1(QDialog):
 
         button_r = QPushButton('-11', self)
         button_r.setStyleSheet("background-color: orange; font-size: 36px")
-        button_r.resize(width/6,height/2)
+        button_r.resize(width/5,height/2)
         button_r.move(0,0)
         button_r.clicked.connect(self.minus_11)
 
         button_s = QPushButton('-1', self)
         button_s.setStyleSheet("background-color: orange; font-size: 36px")
-        button_s.resize(width/6,height/2)
-        button_s.move(width/6,0)
+        button_s.resize(width/5,height/2)
+        button_s.move(width/5,0)
         button_s.clicked.connect(self.minus_1)
 
         self.textbox = QLineEdit(self)
-        self.textbox.move(width/6+width/6, 0)
-        self.textbox.resize(width/3,height/2)
+        self.textbox.move(width/5*2, 0)
+        self.textbox.resize(width/5,height/2)
         self.textbox.setReadOnly(True)
         self.textbox.setText(str(nb))
         self.textbox.setStyleSheet("background-color: white; font-size: 156px; float: center")
 
         button_t = QPushButton('+10', self)
         button_t.setStyleSheet("background-color: orange; font-size: 36px")
-        button_t.resize(width/6,height/2)
-        button_t.move((width/6)*4,0)
+        button_t.resize(width/5,height/2)
+        button_t.move((width/5)*3,0)
         button_t.clicked.connect(self.plus_10)
 
         button_u = QPushButton('+11', self)
         button_u.setStyleSheet("background-color: orange; font-size: 36px")
-        button_u.resize(width/6,height/2)
-        button_u.move((width/6)*5,0)
+        button_u.resize(width/5,height/2)
+        button_u.move((width/5)*4,0)
         button_u.clicked.connect(self.plus_11)
 
         button_v = QPushButton('Confirmer', self)
@@ -182,22 +183,27 @@ class Window1(QDialog):
         tmp = int(self.textbox.text())
         if (tmp - 11 < int(nb)):
             tmp = int(nb)
+            self.total = 0
         else:
             tmp -= 11
+            self.total += 11
         self.textbox.setText(str(tmp))
 
     def minus_1(self):
         tmp = int(self.textbox.text())
         if (tmp - 1 < int(nb)):
             tmp = int(nb)
+            self.total = 0
         else:
             tmp -= 1
+            self.total -= 1
         self.textbox.setText(str(tmp))
 
     @pyqtSlot()
     def plus_11(self):
         tmp = int(self.textbox.text())
         tmp += 11
+        self.total += 11
         self.textbox.setText(str(tmp))
     
     @pyqtSlot()
@@ -214,7 +220,7 @@ class Window1(QDialog):
         strd2 = """UPDATE coffee SET date='""" + date_object + """' WHERE card ='""" + uid + "';"""
         cursor.execute(strd2)
         connection.commit()
-        strd3 = """UPDATE coffee SET historic ='+""" + str(tmp) +';' + historic + """' WHERE card ='""" + uid + "';"""
+        strd3 = """UPDATE coffee SET historic ='+""" + str(self.total) + ' (=' + str(tmp) +');' + historic + """' WHERE card ='""" + uid + "';"""
         cursor.execute(strd3)
         connection.commit()
         self.close()
@@ -223,6 +229,7 @@ class Window1(QDialog):
     def plus_10(self):
         tmp = int(self.textbox.text())
         tmp += 10
+        self.total += 10
         self.textbox.setText(str(tmp))
 
 class Window2(QDialog):
@@ -233,6 +240,7 @@ class Window2(QDialog):
         self.left = 10
         self.top = 10
         self.width = width
+        self.total = 0
         self.height = height
         self.initUI()
 
@@ -282,8 +290,10 @@ class Window2(QDialog):
         tmp = int(self.textbox.text())
         if (tmp + 1 > int(nb)):
             tmp = int(nb)
+            self.total = 0
         else:
             tmp += 1
+            self.total -= 1
         self.textbox.setText(str(tmp))
 
     def plus_2(self):
@@ -301,6 +311,7 @@ class Window2(QDialog):
             tmp = 0
         else:
             tmp -= 1
+            self.total += 1
         self.textbox.setText(str(tmp))
 
     @pyqtSlot()
@@ -326,7 +337,7 @@ class Window2(QDialog):
         strd2 = """UPDATE coffee SET date='""" + date_object + """' WHERE card ='""" + uid + "';"""
         cursor.execute(strd2)
         connection.commit()
-        strd3 = """UPDATE coffee SET historic ='-""" + str(tmp) +';' + historic + """' WHERE card ='""" + uid + "';"""
+        strd3 = """UPDATE coffee SET historic ='-""" + str(self.total) + ' (=' + str(tmp) +');' + historic + """' WHERE card ='""" + uid + "';"""
         cursor.execute(strd3)
         connection.commit()
         self.close()
@@ -349,7 +360,7 @@ class App(QMainWindow, QWidget):
         self.setStyleSheet("background-color: black")
         self.textbox = QLineEdit(self)
         self.textbox.move(0, 0)
-        self.textbox.resize(width/3*2, height/2)
+        self.textbox.resize(width/2, height/4)
         self.textbox.setReadOnly(True)
         if (int(nb) > 1):
             self.textbox.setText(str(nb) + ' cafés restants')
@@ -360,23 +371,23 @@ class App(QMainWindow, QWidget):
         self.textbox.setStyleSheet("background-color: white; font-size: 64px; float: center")
         button_r = QPushButton('RECHARGER', self)
         button_r.setStyleSheet("background-color: orange; font-size: 36px")
-        button_r.resize(width/2,height/2-height/10)
-        button_r.move(0,height/2)
+        button_r.resize(width/2,(height/4)*3-height/10)
+        button_r.move(0,height/4)
         button_r.clicked.connect(self.on_click)
         button_d = QPushButton('DEBITER', self)
         button_d.setStyleSheet("background-color: orange; font-size: 36px")
-        button_d.resize(width/2,height/2-height/10)
-        button_d.move(width/2,height/2)
+        button_d.resize(width/2,(height/4)*3-height/10)
+        button_d.move(width/2,height/4)
         button_d.clicked.connect(self.on_click_d)
         button_s = QPushButton('Annuler', self)
         button_s.setStyleSheet("background-color: orange; font-size: 26px")
         button_s.resize(width,height/10)
         button_s.move(0,(height/10)*9)
         button_s.clicked.connect(self.cancel)
-        button_t = QPushButton('Historic', self)
+        button_t = QPushButton('Historique', self)
         button_t.setStyleSheet("background-color: orange; font-size: 26px")
-        button_t.resize(width/3,height/2)
-        button_t.move(width/3*2,0)
+        button_t.resize(width/2,height/4)
+        button_t.move(width/2,0)
         button_t.clicked.connect(self.historic)
         self.showFullScreen()
 
@@ -421,19 +432,25 @@ class Window3(QScrollArea):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setStyleSheet("background-color: black")
         self.textbox = QLabel(self)
-        self.textbox.move(0, 0)
+        self.textbox.move(0, height/10)
         self.textbox.resize(width, height-height/10)
         self.textbox.setWordWrap(True)
         res = "SELECT historic FROM coffee WHERE card ='" + uid + "';"
         cursor.execute(res)
         tmp = cursor.fetchall()
         tmp = tmp[0][0].replace(';', '\n')
+        tmp = '\n' + tmp
         res2 = "SELECT date FROM coffee WHERE card ='" + uid + "';"
         cursor.execute(res2)
         tmp2 = cursor.fetchall()
-        res3 = "La dernière opération est datée de: " + str(tmp2[0][0]) + '\n\n' + tmp
-        self.textbox.setText(res3)
-        self.textbox.setStyleSheet("background-color: white; font-size: 25px; float: center")
+        res3 = "La dernière opération est datée de: " + str(tmp2[0][0])
+        button_r = QPushButton(res3, self)
+        button_r.setStyleSheet("background-color: orange; font-size: 36px")
+        button_r.resize(width,height/10)
+        button_r.move(0,0)
+        button_r.clicked.connect(self.on_click)
+        self.textbox.setText(tmp)
+        self.textbox.setStyleSheet("background-color: white; font-size: 35px; margin-top: 3px")
         button_r = QPushButton('Retour', self)
         button_r.setStyleSheet("background-color: orange; font-size: 36px")
         button_r.resize(width,height/10)
@@ -465,33 +482,33 @@ def main():
     height = rect.height()
     rdwr_options = {
         'on-connect': on_connect,
-        'beep-on-connect': True,
+        'beep-on-connect': False,
     }
+    connect()
 
     while True: #Main Loop
         with nfc.ContactlessFrontend('usb') as clf:
             clf.connect(rdwr=rdwr_options)
-        uid = uid.replace("'", '')
-        uid = uid.replace('b', '')
-        connect()
-        res = "SELECT coffee FROM coffee WHERE card ='" + uid + "';"
-        cursor.execute(res)
-        tmp = cursor.fetchall()
-        if (len(tmp) == 0):
-            print("Creating...")
-            create_card()
-            nb = '0'
-            ex = App_empty()
-            app.exec_()
-        elif (tmp[0][0] == 0):
-            nb = '0'
-            ex = App_empty()
-            app.exec_()
-        else:
-            nb = str(tmp[0][0])
-            ex = App()
-            app.exec_()
-        
+        if (uid != "0"):
+            uid = uid.replace("'", '')
+            uid = uid.replace('b', '')
+            res = "SELECT coffee FROM coffee WHERE card ='" + uid + "';"
+            cursor.execute(res)
+            tmp = cursor.fetchall()
+            if (len(tmp) == 0):
+                create_card()
+                nb = '0'
+                ex = App_empty()
+                app.exec_()
+            elif (tmp[0][0] == 0):
+                nb = '0'
+                ex = App_empty()
+                app.exec_()
+            else:
+                nb = str(tmp[0][0])
+                ex = App()
+                app.exec_()
+        uid = "0"
         
 if __name__ == "__main__":
     main()
